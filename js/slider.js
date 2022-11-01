@@ -55,5 +55,4 @@ const setSliderSlide = (inputElement, pristine) => {
   );
 };
 
-
 export { setSliderSlide, setSliderToMinValue, resetSlider, setInputValueToSlider, toggleSliderdisabledState };

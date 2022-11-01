@@ -2,10 +2,11 @@ import { createAdElement } from './advertisement.js';
 
 const NUMBER_OF_BALLOONS = 10;
 
-const TokyoCoordinate = {
-  LAT: 35.65283,
-  LNG: 139.83947
+const DEFAULT_COORDINATE = {
+  lat: 35.65283,
+  lng: 139.83947
 };
+
 const Icon = {
   MAIN: L.icon({
     iconUrl: './img/main-pin.svg',
@@ -17,11 +18,6 @@ const Icon = {
     iconSize: [40, 40],
     iconAnchor: [20, 40],
   }),
-};
-
-const defaultCoordinate = {
-  lat: TokyoCoordinate.LAT,
-  lng: TokyoCoordinate.LNG
 };
 
 const createMapInstance = (mapId) => {
@@ -54,14 +50,14 @@ const createMarker = ({ lat, lng }, icon, draggable = false) => {
 const createMarkerGroup = () => L.layerGroup();
 
 const map = createMapInstance('map-canvas');
-const mainMarker = createMarker(defaultCoordinate, Icon.MAIN, true).addTo(map);
+const mainMarker = createMarker(DEFAULT_COORDINATE, Icon.MAIN, true).addTo(map);
 const adMarkerGroup = createMarkerGroup().addTo(map);
 
 const getMarkerCoordinate = () => mainMarker.getLatLng();
 
-const setMarkerCoordinate = (coordinate = defaultCoordinate) => mainMarker.setLatLng(coordinate);
+const setMarkerCoordinate = (coordinate = DEFAULT_COORDINATE) => mainMarker.setLatLng(coordinate);
 
-const setMapView = (coordinate = defaultCoordinate) => map.setView(coordinate, 10);
+const setMapView = (coordinate = DEFAULT_COORDINATE) => map.setView(coordinate, 10);
 
 const deleteBalloons = () => adMarkerGroup.clearLayers();
 
@@ -91,4 +87,4 @@ const setMainMarkerDrag = (cb) => {
   });
 };
 
-export { map, defaultCoordinate, renderMarkers, setMainMarkerDrag, getMarkerCoordinate, resetMap };
+export { map, DEFAULT_COORDINATE, renderMarkers, setMainMarkerDrag, getMarkerCoordinate, resetMap };

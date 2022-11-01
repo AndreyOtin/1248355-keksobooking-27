@@ -1,5 +1,5 @@
 import { setInitialFormState, updateAddressInputValue, toggleAdFormDisebledState, setFormEventListeners } from './form.js';
-import { map, defaultCoordinate, renderMarkers, setMainMarkerDrag, getMarkerCoordinate, resetMap } from './map.js';
+import { map, DEFAULT_COORDINATE, renderMarkers, setMainMarkerDrag, getMarkerCoordinate, resetMap } from './map.js';
 import { toggleFiltersDisabledState, setFilterFormEventListeners } from './filter.js';
 import { adFormPristine } from './pristine-setup.js';
 import { getData } from './api.js';
@@ -25,4 +25,4 @@ map.on('load', () => {
       showAlert(error, map.getContainer());
     });
 })
-  .setView(defaultCoordinate, 10);
+  .setView(DEFAULT_COORDINATE, 10);
