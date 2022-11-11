@@ -6,6 +6,8 @@ const featuresFilterContainerElement = filtersFormElement.querySelector(QuerySel
 const featureFilterElements = featuresFilterContainerElement.querySelectorAll(QuerySelector.CLASS_NAME.MAP_CHECKBOX_FILTER);
 const resetBtnElement = document.querySelector(QuerySelector.CLASS_NAME.RESET_BTN);
 
+const MAX_ADS_NUMBER = 10;
+
 const priceTypeToValue = {
   low: {
     min: 0,
@@ -56,21 +58,19 @@ const isPickedFilterValueInData = (filterElement, data) => {
   }
 };
 
-const applyCheckboxFilters = (data) => {
+const applyCheckboxFilters = (features) => {
   const checkedFilterElements = findCheckedFeatures();
 
   if (!checkedFilterElements.length) {
-    return data;
+    return true;
   }
 
-  return data.filter(({ offer: { features } }) => {
-    if (features) {
-      return checkedFilterElements.every((filterElement) => features.includes(filterElement.value));
-    }
-  });
+  if (features) {
+    return checkedFilterElements.every((filterElement) => features.includes(filterElement.value));
+  }
 };
 
-const applySelectFilters = (data) => data.filter(({ offer }) => {
+const applySelectFilters = (ad) => {
   let coincidenceCount = 0;
   let unusedFiltersCount = 0;
 
@@ -80,17 +80,31 @@ const applySelectFilters = (data) => data.filter(({ offer }) => {
       return;
     }
 
-    if (isPickedFilterValueInData(filterElement, offer)) {
+    if (isPickedFilterValueInData(filterElement, ad.offer)) {
       coincidenceCount++;
     }
   });
 
-  if (filterElements.length - unusedFiltersCount === coincidenceCount) {
-    return true;
-  }
-});
+  return filterElements.length - unusedFiltersCount === coincidenceCount;
+};
 
-const filterData = (data) => applyCheckboxFilters(applySelectFilters(data));
+const filterData = (data) => {
+  const foundElements = [];
+
+  for (const ad of data) {
+    if (foundElements.length === MAX_ADS_NUMBER) {
+      break;
+    }
+
+    const isTargetAd = applySelectFilters(ad) && applyCheckboxFilters(ad.offer.features);
+
+    if (isTargetAd) {
+      foundElements.push(ad);
+    }
+  }
+
+  return foundElements;
+};
 
 const setFiltersChange = (cb, data) => {
   filtersFormElement.addEventListener('change', () => {
