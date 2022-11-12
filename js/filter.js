@@ -45,9 +45,12 @@ const findCheckedFeatures = () => {
   return checkedElements;
 };
 
-const isPickedFilterValueInData = (filterElement, data) => {
-  const key = getDataKey(filterElement.name);
+const isPickedFilterInData = (filterElement, data) => {
+  if (filterElement.value === 'any') {
+    return true;
+  }
 
+  const key = getDataKey(filterElement.name);
   switch (key) {
     case 'price':
       return isPriceInRange(data[key], filterElement.value);
@@ -72,20 +75,14 @@ const applyCheckboxFilters = (features) => {
 
 const applySelectFilters = (ad) => {
   let coincidenceCount = 0;
-  let unusedFiltersCount = 0;
 
   filterElements.forEach((filterElement) => {
-    if (filterElement.value === 'any') {
-      unusedFiltersCount++;
-      return;
-    }
-
-    if (isPickedFilterValueInData(filterElement, ad.offer)) {
+    if (isPickedFilterInData(filterElement, ad.offer)) {
       coincidenceCount++;
     }
   });
 
-  return filterElements.length - unusedFiltersCount === coincidenceCount;
+  return filterElements.length === coincidenceCount;
 };
 
 const filterData = (data) => {
